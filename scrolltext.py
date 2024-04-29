@@ -38,7 +38,7 @@ class ScrollText(tk.Frame):
         self.after(2, self.numberLines.redraw)
 
     def on_key_release(self, *args):
-        self.highlighter.highlight_jovan()
+        self.highlighter.highlight()
 
     def get(self, *args, **kwargs):
         return self.text.get(*args, **kwargs)
@@ -54,6 +54,3 @@ class ScrollText(tk.Frame):
 
     def redraw(self):
         self.numberLines.redraw()
-
-
-

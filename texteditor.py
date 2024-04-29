@@ -26,11 +26,11 @@ class TextEditor:
 
         # File menu
         self.file_menu = tk.Menu(self.menu_bar, tearoff=0)
-        self.file_menu.add_command(label="New File", command=self.new_file)
-        self.file_menu.add_command(label="Open File", command=self.open_file)
-        self.file_menu.add_command(label="Open Folder", command=self.open_folder)
-        self.file_menu.add_command(label="Save", command=self.save_file)
-        self.file_menu.add_command(label="Save As", command=self.save_as_file)
+        self.file_menu.add_command(label="New File", command=self.new_file, accelerator="Ctrl+N")
+        self.file_menu.add_command(label="Open File", command=self.open_file, accelerator="Ctrl+O")
+        self.file_menu.add_command(label="Open Folder", command=self.open_folder, accelerator="Alt+F")
+        self.file_menu.add_command(label="Save", command=self.save_file, accelerator="Ctrl+S")
+        self.file_menu.add_command(label="Save As", command=self.save_as_file, accelerator="Ctrl+Shift+S")
         self.file_menu.add_command(label="Exit", command=self.root.quit)
         self.menu_bar.add_cascade(label="File", menu=self.file_menu)
 
@@ -50,6 +50,12 @@ class TextEditor:
 
         # Bind the open selected file method to the file tree
         self.file_tree.bind("<<TreeviewOpen>>", self.open_selected_file)
+
+        self.root.bind("<Control-n>", lambda event: self.new_file())
+        self.root.bind("<Control-o>", lambda event: self.open_file())
+        self.root.bind("<Alt-f>", lambda event: self.open_folder())
+        self.root.bind("<Control-s>", lambda event: self.save_file())
+        self.root.bind("<Control-Shift-S>", lambda event: self.save_as_file())
 
     def create_scroll_text(self):
         if hasattr(self, 'scroll_text'):

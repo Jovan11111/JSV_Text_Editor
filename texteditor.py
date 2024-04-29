@@ -16,7 +16,7 @@ class TextEditor:
 
         # Create the text area
         self.create_scroll_text()
-
+        # blabla
         # Create the file tree
         self.file_tree = FileTree(self.root)
         self.file_tree.pack(side='left', fill='both', expand=True)

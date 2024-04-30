@@ -13,7 +13,7 @@ class TextEditor:
 
         # Save the folder path
         self.folder_path = ""
-
+        self.file_path = ""
         # Create the text area
         self.create_scroll_text()
         # blabla
@@ -61,7 +61,7 @@ class TextEditor:
         if hasattr(self, 'scroll_text'):
             self.scroll_text.destroy()
 
-        self.scroll_text = ScrollText(self.root)
+        self.scroll_text = ScrollText(self.root, self.file_path)
         self.scroll_text.pack(side='right', expand=True, fill='both')
         self.scroll_text.text.config(tabs=32)
 
@@ -72,7 +72,9 @@ class TextEditor:
     def open_file(self):
         file_path = filedialog.askopenfilename()
         if file_path:
+            self.file_path = file_path
             self.open_text_file(file_path)
+            self.scroll_text.set_highlighter(file_path)
 
     def open_folder(self):
         folder_path = filedialog.askdirectory()

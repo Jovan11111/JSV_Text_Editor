@@ -1,10 +1,14 @@
 import tkinter as tk
 import highLighter
 import textLineNumbers
+from SVHihglighter import SVHighlighter
+from CHighlighter import CHighLighter
 
 
 class ScrollText(tk.Frame):
     def __init__(self, master, *args, **kwargs):
+        self.file_path = ""
+
         tk.Frame.__init__(self, *args, **kwargs)
         self.text = tk.Text(self, bg='#2b2b2b', foreground="#d1dce8",
                             insertbackground='white',
@@ -25,8 +29,10 @@ class ScrollText(tk.Frame):
         self.scrollbar.bind("<Button-1>", self.onScrollPress)
         self.text.bind("<MouseWheel>", self.onPressDelay)
         self.text.bind("<KeyRelease>", self.on_key_release)
-
-        self.highlighter = highLighter.Highlighter(self.text)
+        if self.file_path.split('.')[-1] == "sv":
+            self.highlighter = SVHighlighter(self.text)
+        else:
+            self.highlighter = CHighLighter(self.text)
 
     def onScrollPress(self, *args):
         self.scrollbar.bind("<B1-Motion>", self.numberLines.redraw)
@@ -39,6 +45,12 @@ class ScrollText(tk.Frame):
 
     def on_key_release(self, *args):
         self.highlighter.highlight()
+
+    def set_highlighter(self, file_path):
+        if file_path.split('.')[-1] == "sv":
+            self.highlighter = SVHighlighter(self.text)
+        else:
+            self.highlighter = CHighLighter(self.text)
 
     def get(self, *args, **kwargs):
         return self.text.get(*args, **kwargs)

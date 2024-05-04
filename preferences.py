@@ -29,12 +29,22 @@ class Preferences:
                                                 command=self.toggle_line_numbers)
         checkbox_line_numbers.grid(row=1, column=0, columnspan=2, padx=10, pady=5, sticky='w')
 
+        self.auto_indent_var = tk.BooleanVar(value=self.text_editor.scroll_text.auto_indent_enabled)
+        checkbox_auto_indent = ttk.Checkbutton(self.preferences_window, text="Auto Indent On",
+                                                variable=self.auto_indent_var,
+                                                command=self.toggle_auto_indent)
+
+        checkbox_auto_indent.grid(row=2, column=0, columnspan=2, padx=10, pady=5, sticky='w')
+
         # Add Apply button
         apply_button = ttk.Button(self.preferences_window, text="Apply", command=self.apply_preferences)
         apply_button.grid(row=2, column=0, columnspan=2, padx=10, pady=5, sticky='e')
 
     def toggle_line_numbers(self):
         self.text_editor.toggle_line_numbers(self.line_numbers_var.get())
+
+    def toggle_auto_indent(self):
+        self.text_editor.scroll_text.auto_indent_enabled = not self.text_editor.scroll_text.auto_indent_enabled
 
     def apply_preferences(self):
         try:

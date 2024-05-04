@@ -8,7 +8,7 @@ from CHighlighter import CHighLighter
 class ScrollText(tk.Frame):
     def __init__(self, master, *args, **kwargs):
         self.file_path = ""
-
+        self.auto_indent_enabled = True
         tk.Frame.__init__(self, *args, **kwargs)
         self.text = tk.Text(self, bg='#2b2b2b', foreground="#d1dce8",
                             insertbackground='white',
@@ -29,10 +29,38 @@ class ScrollText(tk.Frame):
         self.scrollbar.bind("<Button-1>", self.onScrollPress)
         self.text.bind("<MouseWheel>", self.onPressDelay)
         self.text.bind("<KeyRelease>", self.on_key_release)
+        self.text.bind("<Return>", self.autoIndent)
+        self.text.bind("<Ctrl-z>", self.text.edit_undo())
+
         if self.file_path.split('.')[-1] == "sv":
             self.highlighter = SVHighlighter(self.text)
         else:
             self.highlighter = CHighLighter(self.text)
+
+    def autoIndent(self, *args):
+        if self.auto_indent_enabled:
+            cursor_index = self.text.index(tk.INSERT)
+
+            # Get the content of the current line
+            line, column = cursor_index.split(".")
+            line_content = self.text.get(f"{line}.0", f"{line}.end")
+
+            # Count the number of leading spaces or tabs
+            indent_level = 0
+            for char in line_content:
+                if char == "\t":
+                    indent_level += 1
+                else:
+                    break
+
+            # Insert the same indentation in the new line
+            self.text.insert(tk.INSERT, "\n" + "\t" * indent_level)
+
+            # Return 'break' to prevent the default behavior of Enter key
+            return 'break'
+        else:
+            self.text.insert(tk.INSERT, "\n")
+            return 'break'
 
     def onScrollPress(self, *args):
         self.scrollbar.bind("<B1-Motion>", self.numberLines.redraw)

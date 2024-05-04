@@ -30,7 +30,7 @@ class SVHighlighter(Highlighter):
         self.text_widget.tag_remove(self.keyword_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
         for word in self.keywords:
-            matches = re.finditer(rf'\b{word}\b', text_content, flags=re.IGNORECASE)
+            matches = re.finditer(rf'\b{word}\b', text_content, flags=re.DOTALL)
             for match in matches:
                 start_pos = match.start()
                 end_pos = match.end()
@@ -43,7 +43,7 @@ class SVHighlighter(Highlighter):
         self.text_widget.tag_remove(self.type_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
         for word in self.types:
-            matches = re.finditer(rf'\b{word}\b', text_content, flags=re.IGNORECASE)
+            matches = re.finditer(rf'\b{word}\b', text_content, flags=re.DOTALL)
             for match in matches:
                 start_pos = match.start()
                 end_pos = match.end()
@@ -65,7 +65,7 @@ class SVHighlighter(Highlighter):
             self.text_widget.tag_add(self.comment_tag, start, end)
             self.text_widget.tag_configure(self.comment_tag, foreground="gray")
 
-        matches = re.finditer(r'//.*?\n', text_content)
+        matches = re.finditer(r'//.*?\n', text_content, flags=re.DOTALL)
         for match in matches:
             start_pos = match.start()
             end_pos = match.end()

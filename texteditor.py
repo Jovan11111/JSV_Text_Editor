@@ -16,7 +16,6 @@ class TextEditor:
         self.file_path = ""
         # Create the text area
         self.create_scroll_text()
-        # blabla
         # Create the file tree
         self.file_tree = FileTree(self.root)
         self.file_tree.pack(side='left', fill='both', expand=True)
@@ -74,7 +73,6 @@ class TextEditor:
         if file_path:
             self.file_path = file_path
             self.open_text_file(file_path)
-            self.scroll_text.set_highlighter(file_path)
 
     def open_folder(self):
         folder_path = filedialog.askdirectory()
@@ -118,24 +116,25 @@ class TextEditor:
             return self.file_tree.item(item, "text")
 
     def open_text_file(self, file_path):
-        with open(file_path, "r") as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             content = file.read()
             self.scroll_text.delete("1.0", tk.END)
             self.scroll_text.insert(tk.END, content)
             self.root.title("Simple Text Editor - " + os.path.basename(file_path))
+            self.scroll_text.set_highlighter(file_path)
 
     def save_file(self):
         if not self.folder_path:
             return self.save_as_file()
         file_path = os.path.join(self.folder_path, self.root.title().split(" - ")[-1])
-        with open(file_path, "w") as file:
+        with open(file_path, "w", encoding="utf-8") as file:
             content = self.scroll_text.get("1.0", tk.END)
             file.write(content)
 
     def save_as_file(self):
         file_path = filedialog.asksaveasfilename(defaultextension=".txt")
         if file_path:
-            with open(file_path, "w") as file:
+            with open(file_path, "w", encoding="utf-8") as file:
                 content = self.scroll_text.get("1.0", tk.END)
                 file.write(content)
             self.root.title("Simple Text Editor - " + os.path.basename(file_path))

@@ -21,7 +21,7 @@ class SVHighlighter(Highlighter):
                          "endfunction", "pmos", "endtable", "pull0", "endtask", "pull1", "pullup", "wait", "for",
                          "pulldown", "while", "function", "weak1", "fork", "force", "rcmos", "weak0", "forever",
                          "highz0", "release", "highz1", "repeat", "xnor", "if", "rnmos", "xor", "return", "super",
-                         "new", "package", "endpackage", "class", "extends", "endclass"]
+                         "new", "package", "endpackage", "class", "extends", "endclass", "this", "enum"]
 
         self.types = ["input", "inout", "integer", "scalared", "supply0", "supply1", "time", "output", "tri",
                       "parameter", "tri0", "tri1", "triand", "trior", "trireg", "vectored", "event", "wand", "real",

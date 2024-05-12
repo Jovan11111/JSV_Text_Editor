@@ -8,43 +8,28 @@ class UVMAutocompleter(tk.Text):
         self._uvm_macros = kwargs.pop("uvm_macros", [])
         super().__init__(*args, **kwargs)
 
-        # bind on key release, which will happen after tkinter
-        # inserts the typed character
         self.bind("<Any-KeyRelease>", self._autocomplete)
 
     def _autocomplete(self, event):
         if event.char:
-            # get word preceding the insertion cursor
             word = self.get_word_under_cursor()
 
-            # pass word to callback to get possible matches
             matches = self.get_matches(word)
 
             if matches:
-                # autocomplete on the first match
                 remainder = matches[0][len(word):]
 
-                # remember the current insertion cursor
                 insert = self.index("insert")
-
-                # insert at the insertion cursor the remainder of
-                # the matched word, and apply the tag "sel" so that
-                # it is selected. Also, add the "autocomplete" text
-                # which will make it easier to find later.
                 self.insert(insert, remainder, ("sel", "autocomplete"))
 
-                # move the cursor to the end of the autofilled word
                 self.mark_set("insert", f"{insert}+{len(remainder)}c")
 
     def get_word_under_cursor(self):
-        # Get the index of the current cursor position
         cursor_index = self.index(tk.INSERT)
 
-        # Use a regular expression to find the word preceding the cursor
         line_text = self.get(f"{cursor_index.split('.')[0]}.0", cursor_index)
         match = re.search(r'\b\w+$|`[^\s`]+$', line_text)
 
-        # Return the word if found, otherwise an empty string
         return match.group() if match else ""
 
     def get_matches(self, word):

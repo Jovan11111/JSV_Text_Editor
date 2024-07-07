@@ -11,9 +11,8 @@ class UVMAutocompleter(tk.Text):
         self.bind("<Any-KeyRelease>", self._autocomplete)
 
     def _autocomplete(self, event):
-        if event.char:
+        if event.keysym:
             word = self.get_word_under_cursor()
-
             matches = self.get_matches(word)
 
             if matches:
@@ -38,6 +37,7 @@ class UVMAutocompleter(tk.Text):
         if word.startswith("uvm_"):
             matches.extend([x for x in self._uvm_classes if x.startswith(word)])
         if word.startswith("`uvm_"):
+            print("MATCH")
             matches.extend([x for x in self._uvm_macros if x.startswith(word)])
         return matches
 
@@ -73,4 +73,5 @@ uvm_macros = [
     "`uvm_field_object_utils_vs()", "`uvm_cmdline_processor()", "`uvm_global_context()", "`uvm_field_declare()",
     "`uvm_void()", "`uvm_which_packer()", "`uvm_component_registry()"
 ]
+
 

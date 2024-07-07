@@ -60,7 +60,7 @@ class TextEditor:
         if hasattr(self, 'scroll_text'):
             self.scroll_text.destroy()
 
-        self.scroll_text = ScrollText(self.root, self.file_path)
+        self.scroll_text = ScrollText(self.root)
         self.scroll_text.pack(side='right', expand=True, fill='both')
         self.scroll_text.text.config(tabs=32)
 

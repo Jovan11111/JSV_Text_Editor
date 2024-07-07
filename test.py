@@ -1,69 +1,47 @@
 import tkinter as tk
+import re
+
 
 class UVMAutocompleter(tk.Text):
     def __init__(self, *args, **kwargs):
         self._uvm_classes = kwargs.pop("uvm_classes", [])
+        self._uvm_macros = kwargs.pop("uvm_macros", [])
         super().__init__(*args, **kwargs)
 
-        # bind on key release, which will happen after tkinter
-        # inserts the typed character
         self.bind("<Any-KeyRelease>", self._autocomplete)
 
-        # special handling for tab, which needs to happen on the
-        # key _press_
-        self.bind("<Tab>", self._handle_tab)
-
-    def _handle_tab(self, event):
-        # see if any text has the "autocomplete" tag
-        tag_ranges= self.tag_ranges("autocomplete")
-        if tag_ranges:
-            # move the insertion cursor to the end of
-            # the selected text, and then remove the "sel"
-            # and "autocomplete" tags
-            self.mark_set("insert", tag_ranges[1])
-            self.tag_remove("sel", "1.0", "end")
-            self.tag_remove("autocomplete", "1.0", "end")
-
-            # prevent the default behavior of inserting a literal tab
-            return "break"
-
     def _autocomplete(self, event):
-        if event.char:
-            # get word preceeding the insertion cursor
-            word = self.get("insert-1c wordstart", "insert-1c wordend")
-
-            # pass word to callback to get possible matches
+        if event.keysym:
+            word = self.get_word_under_cursor()
             matches = self.get_matches(word)
 
             if matches:
-                # autocomplete on the first match
                 remainder = matches[0][len(word):]
 
-                # remember the current insertion cursor
                 insert = self.index("insert")
-
-                # insert at the insertion cursor the remainder of
-                # the matched word, and apply the tag "sel" so that
-                # it is selected. Also, add the "autocomplete" text
-                # which will make it easier to find later.
                 self.insert(insert, remainder, ("sel", "autocomplete"))
 
-                # move the cursor to the end of the autofilled word
                 self.mark_set("insert", f"{insert}+{len(remainder)}c")
 
+    def get_word_under_cursor(self):
+        cursor_index = self.index(tk.INSERT)
+
+        line_text = self.get(f"{cursor_index.split('.')[0]}.0", cursor_index)
+        match = re.search(r'\b\w+$|`[^\s`]+$', line_text)
+
+        return match.group() if match else ""
+
     def get_matches(self, word):
-        # Check if word is in the uvm_classes list
+        matches = []
+        print(word)
         if word.startswith("uvm_"):
-            matches = [x for x in self._uvm_classes if x.startswith(word)]
-        else:
-            matches = []
+            matches.extend([x for x in self._uvm_classes if x.startswith(word)])
+        if word.startswith("`uvm_"):
+            print("MATCH")
+            matches.extend([x for x in self._uvm_macros if x.startswith(word)])
         return matches
 
-root = tk.Tk()
-root.title('UVMAutocompleter')
-root.geometry('600x400')
 
-# List of uvm_classes
 uvm_classes = [
     "uvm_object", "uvm_component", "uvm_env", "uvm_agent", "uvm_sequencer_base", "uvm_driver",
     "uvm_sequence_item", "uvm_sequence", "uvm_sequence_library", "uvm_subscriber", "uvm_monitor",
@@ -77,7 +55,31 @@ uvm_classes = [
     "uvm_timeout", "uvm_merger"
 ]
 
-text = UVMAutocompleter(root, uvm_classes=uvm_classes)
+uvm_macros = [
+    "`uvm_component_utils()", "`uvm_component_utils_param()", "`uvm_component_utils_begin()",
+    "`uvm_component_utils_end()", "`uvm_object_utils()", "`uvm_object_param_utils()", "`uvm_object_registry()",
+    "`uvm_factory_override()", "`uvm_default_factory()", "`uvm_sequence_library()", "`uvm_sequence_utils()",
+    "`uvm_sequence_library_defines()", "`uvm_info()", "`uvm_warning()", "`uvm_error()", "`uvm_fatal()",
+    "`uvm_report_info()", "`uvm_report_warning()", "`uvm_report_error()", "`uvm_report_fatal()", "`uvm_info_context()",
+    "`uvm_error_context()", "`uvm_warning_context()", "`uvm_fatal_context()", "`uvm_config_db()", "`uvm_verbosity()",
+    "`uvm_object_utils_copy()", "`uvm_object_utils_clone()", "`uvm_object_utils_clone_type()",
+    "`uvm_object_utils_copy_with()", "`uvm_object_utils_deep_copy()", "`uvm_object_utils_deep_copy_with()",
+    "`uvm_object_utils_deep_compare()", "`uvm_field_int()", "`uvm_field_string()", "`uvm_field_bit()",
+    "`uvm_field_byte()", "`uvm_field_enum()", "`uvm_field_real()", "`uvm_field_time()", "`uvm_field_longint",
+    "`uvm_field_array_int()", "`uvm_field_array_string()", "`uvm_field_array_bit()", "`uvm_field_array_byte()",
+    "`uvm_field_array_enum()", "`uvm_field_array_real()", "`uvm_field_array_time()",
+    "`uvm_field_array_longint()", "`uvm_field_object()", "`uvm_field_object_utils()", "`uvm_field_object_utils_array()",
+    "`uvm_field_object_utils_s()", "`uvm_field_object_utils_sa()", "`uvm_field_object_utils_v()",
+    "`uvm_field_object_utils_vs()", "`uvm_cmdline_processor()", "`uvm_global_context()", "`uvm_field_declare()",
+    "`uvm_void()", "`uvm_which_packer()", "`uvm_component_registry()"
+]
+
+
+root = tk.Tk()
+root.title('UVMAutocompleter')
+root.geometry('600x400')
+
+text = UVMAutocompleter(root, uvm_classes=uvm_classes, uvm_macros=uvm_macros)
 text.pack(fill="both", expand=True)
 
 root.mainloop()

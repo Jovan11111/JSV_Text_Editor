@@ -35,8 +35,6 @@ class TextEditor:
 
         # Edit menu
         self.edit_menu = tk.Menu(self.menu_bar, tearoff=0)
-        self.edit_menu.add_command(label="Undo", command=self.undo)
-        self.edit_menu.add_command(label="Redo", command=self.redo)
         self.menu_bar.add_cascade(label="Edit", menu=self.edit_menu)
 
         # Preferences menu
@@ -138,12 +136,6 @@ class TextEditor:
                 content = self.scroll_text.get("1.0", tk.END)
                 file.write(content)
             self.root.title("Simple Text Editor - " + os.path.basename(file_path))
-
-    def undo(self):
-        self.scroll_text.text.edit_undo()
-
-    def redo(self):
-        self.scroll_text.text.edit_redo()
 
     def toggle_line_numbers(self, show_line_numbers):
         if show_line_numbers:

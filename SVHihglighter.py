@@ -21,11 +21,11 @@ class SVHighlighter(Highlighter):
                          "endfunction", "pmos", "endtable", "pull0", "endtask", "pull1", "pullup", "wait", "for",
                          "pulldown", "while", "function", "weak1", "fork", "force", "rcmos", "weak0", "forever",
                          "highz0", "release", "highz1", "repeat", "xnor", "if", "rnmos", "xor", "return", "super",
-                         "new", "package", "endpackage", "class", "extends", "endclass", "this", "enum"]
+                         "new", "package", "endpackage", "class", "extends", "endclass", "this", "enum", "virtual"]
 
         self.types = ["input", "inout", "integer", "scalared", "supply0", "supply1", "time", "output", "tri",
                       "parameter", "tri0", "tri1", "triand", "trior", "trireg", "vectored", "event", "wand", "real",
-                      "realtime", "reg", "wire", "wor", "int", "string"]
+                      "realtime", "reg", "wire", "wor", "int", "string", "logic"]
 
         self.uvm_classes = [
             "uvm_object", "uvm_component", "uvm_env", "uvm_agent", "uvm_sequencer_base", "uvm_driver",
@@ -58,7 +58,7 @@ class SVHighlighter(Highlighter):
             "uvm_field_object_utils_array",
             "uvm_field_object_utils_s", "uvm_field_object_utils_sa", "uvm_field_object_utils_v",
             "uvm_field_object_utils_vs", "uvm_cmdline_processor", "uvm_global_context", "uvm_field_declare",
-            "uvm_void", "uvm_which_packer", "uvm_component_registry"
+            "uvm_void", "uvm_which_packer", "uvm_component_registry", "uvm_analysis_imp_decl"
         ]
 
     def highlight_keywords(self):

@@ -9,14 +9,16 @@ from UVMAutocompleter import UVMAutocompleter, uvm_classes, uvm_macros
 class ScrollText(tk.Frame):
     def __init__(self, master, *args, **kwargs):
         self.file_path = ""
+        #self.autocomplete = True
         self.auto_indent_enabled = True
         tk.Frame.__init__(self, *args, **kwargs)
 
-        # Initialize UVMAutocompleter with uvm_classes
         self.text = UVMAutocompleter(self, uvm_classes=uvm_classes, uvm_macros=uvm_macros,
                                      bg='#2b2b2b', foreground="#d1dce8",
                                      insertbackground='white',
-                                     selectbackground="blue", width=120, height=30)
+                                     selectbackground="#4e77e7", width=120, height=30,
+                                     undo=True, autoseparators=True, maxundo=-1
+                                    )
 
         self.scrollbar = tk.Scrollbar(self, orient=tk.VERTICAL, command=self.text.yview)
         self.text.configure(yscrollcommand=self.scrollbar.set)
@@ -45,11 +47,9 @@ class ScrollText(tk.Frame):
         if self.auto_indent_enabled:
             cursor_index = self.text.index(tk.INSERT)
 
-            # Get the content of the current line
             line, column = cursor_index.split(".")
             line_content = self.text.get(f"{line}.0", f"{line}.end")
 
-            # Count the number of leading spaces or tabs
             indent_level = 0
             for char in line_content:
                 if char == "\t":
@@ -74,8 +74,8 @@ class ScrollText(tk.Frame):
 
     def on_key_release(self, event):
         self.highlighter.highlight()
-
-        self.text._autocomplete(event)
+        if event.keysym not in ("BackSpace", "Delete", "Left", "Right", "Up", "Down"):
+            self.text._autocomplete(event)
 
     def set_highlighter(self, file_path):
         if file_path.split('.')[-1] == "sv":
@@ -97,3 +97,5 @@ class ScrollText(tk.Frame):
 
     def redraw(self):
         self.numberLines.redraw()
+
+

@@ -8,8 +8,6 @@ class UVMAutocompleter(tk.Text):
         self._uvm_macros = kwargs.pop("uvm_macros", [])
         super().__init__(*args, **kwargs)
 
-        self.bind("<Any-KeyRelease>", self._autocomplete)
-
     def _autocomplete(self, event):
         if event.keysym:
             word = self.get_word_under_cursor()

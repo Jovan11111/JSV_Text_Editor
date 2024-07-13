@@ -1,4 +1,17 @@
-from highLighter import Highlighter
+"""
+==================================================================
+Project Name:    JSV_Text_Editor
+File Name:       SVHighlighter.py
+Description:     
+
+Author:          Jovan11111
+Creation Date:   13.7.2024
+Version:         1.0
+
+==================================================================
+"""
+
+from highlighter.highLighter import Highlighter
 import re
 import tkinter as tk
 
@@ -61,6 +74,10 @@ class SVHighlighter(Highlighter):
             "uvm_void", "uvm_which_packer", "uvm_component_registry", "uvm_analysis_imp_decl"
         ]
 
+
+    """
+    
+    """
     def highlight_keywords(self):
         self.text_widget.tag_remove(self.keyword_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
@@ -74,6 +91,10 @@ class SVHighlighter(Highlighter):
                 self.text_widget.tag_add(self.keyword_tag, start, end)
                 self.text_widget.tag_configure(self.keyword_tag, foreground="orange")
 
+
+    """
+    
+    """
     def highlight_types(self):
         self.text_widget.tag_remove(self.type_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
@@ -87,6 +108,10 @@ class SVHighlighter(Highlighter):
                 self.text_widget.tag_add(self.type_tag, start, end)
                 self.text_widget.tag_configure(self.type_tag, foreground="#77d197")
 
+
+    """
+    
+    """
     def highlight_comments(self):
         self.text_widget.tag_remove(self.comment_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
@@ -109,6 +134,10 @@ class SVHighlighter(Highlighter):
             self.text_widget.tag_add(self.comment_tag, start, end)
             self.text_widget.tag_configure(self.comment_tag, foreground="gray")
 
+
+    """
+    
+    """
     def highlight_strings(self):
         self.text_widget.tag_remove(self.string_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
@@ -122,6 +151,10 @@ class SVHighlighter(Highlighter):
             self.text_widget.tag_add(self.string_tag, start, end)
             self.text_widget.tag_configure(self.string_tag, foreground="green")
 
+
+    """
+    
+    """
     def highlight_uvm_classes(self):
         self.text_widget.tag_remove(self.uvm_class_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
@@ -135,6 +168,10 @@ class SVHighlighter(Highlighter):
                 self.text_widget.tag_add(self.uvm_class_tag, start, end)
                 self.text_widget.tag_configure(self.uvm_class_tag, foreground="#ffff66")
 
+
+    """
+    
+    """
     def highlight_uvm_macros(self):
         self.text_widget.tag_remove(self.uvm_macro_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
@@ -150,6 +187,10 @@ class SVHighlighter(Highlighter):
                 self.text_widget.tag_add(self.uvm_macro_tag, start, end)
                 self.text_widget.tag_configure(self.uvm_macro_tag, foreground="#c0c0c0")
 
+
+    """
+    
+    """
     def highlight(self):
         self.highlight_keywords()
         self.highlight_types()

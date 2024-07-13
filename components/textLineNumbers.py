@@ -1,3 +1,18 @@
+"""
+==================================================================
+Project Name:    JSV_Text_Editor
+File Name:       textLineNumbers.py
+Description:     A custom text editor with features tailored for UVM code, 
+                 including syntax highlighting, autocompletion, auto-indentation,
+                 line numbering, commenting, and find/replace functionality.
+
+Author:          Jovan11111
+Creation Date:   13.7.2024
+Version:         1.0
+
+==================================================================
+"""
+
 import tkinter as tk
 
 
@@ -6,9 +21,17 @@ class TextLineNumbers(tk.Canvas):
         tk.Canvas.__init__(self, *args, **kwargs, highlightthickness=0)
         self.textwidget = None
 
+
+    """
+    
+    """
     def attach(self, text_widget):
         self.textwidget = text_widget
 
+
+    """
+    
+    """
     def redraw(self, *args):
         self.delete("all")
 

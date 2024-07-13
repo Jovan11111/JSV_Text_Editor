@@ -1,7 +1,7 @@
 """
 ==================================================================
 Project Name:    JSV_Text_Editor
-File Name:       main.py
+File Name:       filetree.py
 Description:     A custom text editor with features tailored for UVM code, 
                  including syntax highlighting, autocompletion, auto-indentation,
                  line numbering, commenting, and find/replace functionality.
@@ -13,10 +13,9 @@ Version:         1.0
 ==================================================================
 """
 
-import tkinter as tk
-from components.texteditor import TextEditor
+from tkinter import ttk
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    editor = TextEditor(root)
-    root.mainloop()
+
+class FileTree(ttk.Treeview):
+    def __init__(self, root, *args, **kwargs):
+        ttk.Treeview.__init__(self, root, *args, **kwargs)

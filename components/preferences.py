@@ -1,3 +1,16 @@
+"""
+==================================================================
+Project Name:    JSV_Text_Editor
+File Name:       preferences.py
+Description:     
+
+Author:          Jovan11111
+Creation Date:   13.7.2024
+Version:         1.0
+
+==================================================================
+"""
+
 import tkinter as tk
 from tkinter import ttk
 
@@ -7,6 +20,10 @@ class Preferences:
         self.master = master
         self.text_editor = text_editor
 
+
+    """
+    
+    """
     def open_preferences(self):
         self.preferences_window = tk.Toplevel(self.master)
         self.preferences_window.title("Preferences")
@@ -40,12 +57,24 @@ class Preferences:
         apply_button = ttk.Button(self.preferences_window, text="Apply", command=self.apply_preferences)
         apply_button.grid(row=2, column=0, columnspan=2, padx=10, pady=5, sticky='e')
 
+
+    """
+    
+    """
     def toggle_line_numbers(self):
         self.text_editor.toggle_line_numbers(self.line_numbers_var.get())
 
+
+    """
+    
+    """
     def toggle_auto_indent(self):
         self.text_editor.scroll_text.auto_indent_enabled = not self.text_editor.scroll_text.auto_indent_enabled
 
+
+    """
+    
+    """
     def apply_preferences(self):
         try:
             # Update tab width in the text area

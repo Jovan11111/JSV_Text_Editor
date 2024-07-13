@@ -1,3 +1,16 @@
+"""
+==================================================================
+Project Name:    JSV_Text_Editor
+File Name:       UVMAutocompleter.py
+Description:     
+
+Author:          Jovan11111
+Creation Date:   13.7.2024
+Version:         1.0
+
+==================================================================
+"""
+
 import tkinter as tk
 import re
 
@@ -8,6 +21,10 @@ class UVMAutocompleter(tk.Text):
         self._uvm_macros = kwargs.pop("uvm_macros", [])
         super().__init__(*args, **kwargs)
 
+
+    """
+    
+    """
     def _autocomplete(self, event):
         word = self.get_word_under_cursor()
         matches = self.get_matches(word)
@@ -21,6 +38,10 @@ class UVMAutocompleter(tk.Text):
             self.mark_set("insert", f"{insert}+{len(remainder)}c")
             self._is_autocompleting = True
 
+
+    """
+    
+    """
     def get_word_under_cursor(self):
         cursor_index = self.index(tk.INSERT)
 
@@ -29,6 +50,10 @@ class UVMAutocompleter(tk.Text):
 
         return match.group() if match else ""
 
+
+    """
+    
+    """
     def get_matches(self, word):
         matches = []
         if word.startswith("uvm_"):
@@ -38,6 +63,7 @@ class UVMAutocompleter(tk.Text):
         return matches
 
 
+#
 uvm_classes = [
     "uvm_object", "uvm_component", "uvm_env", "uvm_agent", "uvm_sequencer_base", "uvm_driver",
     "uvm_sequence_item", "uvm_sequence", "uvm_sequence_library", "uvm_subscriber", "uvm_monitor",
@@ -51,6 +77,8 @@ uvm_classes = [
     "uvm_timeout", "uvm_merger"
 ]
 
+
+#
 uvm_macros = [
     "`uvm_component_utils", "`uvm_component_utils_param", "`uvm_component_utils_begin",
     "`uvm_component_utils_end", "`uvm_object_utils", "`uvm_object_param_utils", "`uvm_object_registry",

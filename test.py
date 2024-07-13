@@ -1,83 +1,54 @@
 import tkinter as tk
-import re
 
+class ResizableFramesApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Resizable Frames Example")
 
-class UVMAutocompleter(tk.Text):
-    def __init__(self, *args, **kwargs):
-        self._uvm_classes = kwargs.pop("uvm_classes", [])
-        self._uvm_macros = kwargs.pop("uvm_macros", [])
-        super().__init__(*args, **kwargs)
+        # Set window size
+        self.root.geometry("600x800")
 
-    def _autocomplete(self, event):
-        if event.keysym:
-            word = self.get_word_under_cursor()
-            matches = self.get_matches(word)
+        # Create the main frame for holding everything
+        self.main_frame = tk.Frame(root)
+        self.main_frame.pack(fill=tk.BOTH, expand=True)
 
-            if matches:
-                remainder = matches[0][len(word):]
+        # Create a PanedWindow for the left (red) and right (blue and green) sides
+        self.paned_window = tk.PanedWindow(self.main_frame, orient=tk.HORIZONTAL)
 
-                insert = self.index("insert")
-                self.insert(insert, remainder, ("sel", "autocomplete"))
+        # Create the left red frame with initial width of 100px
+        self.red_frame = tk.Frame(self.paned_window, bg='red', width=100)
+        self.red_frame.pack_propagate(False)  # Prevent frame from shrinking to fit contents
+        self.red_frame.grid(row=0, column=0, sticky="nsew")
 
-                self.mark_set("insert", f"{insert}+{len(remainder)}c")
+        # Create a PanedWindow for the right side
+        self.paned_window_right = tk.PanedWindow(self.paned_window, orient=tk.VERTICAL)
 
-    def get_word_under_cursor(self):
-        cursor_index = self.index(tk.INSERT)
+        # Create frames for the right side
+        self.blue_frame = tk.Frame(self.paned_window_right, bg='blue')
+        self.green_frame = tk.Frame(self.paned_window_right, bg='green')
 
-        line_text = self.get(f"{cursor_index.split('.')[0]}.0", cursor_index)
-        match = re.search(r'\b\w+$|`[^\s`]+$', line_text)
+        # Add frames to PanedWindow on the right
+        self.paned_window_right.add(self.blue_frame)
+        self.paned_window_right.add(self.green_frame)
 
-        return match.group() if match else ""
+        # Add red frame and right side PanedWindow to the main PanedWindow
+        self.paned_window.add(self.red_frame)
+        self.paned_window.add(self.paned_window_right)
 
-    def get_matches(self, word):
-        matches = []
-        print(word)
-        if word.startswith("uvm_"):
-            matches.extend([x for x in self._uvm_classes if x.startswith(word)])
-        if word.startswith("`uvm_"):
-            print("MATCH")
-            matches.extend([x for x in self._uvm_macros if x.startswith(word)])
-        return matches
+        # Pack the main PanedWindow
+        self.paned_window.pack(fill=tk.BOTH, expand=True)
 
+        # Configure resizing behavior
+        self.main_frame.grid_rowconfigure(0, weight=1)
+        self.main_frame.grid_columnconfigure(0, weight=1)
 
-uvm_classes = [
-    "uvm_object", "uvm_component", "uvm_env", "uvm_agent", "uvm_sequencer_base", "uvm_driver",
-    "uvm_sequence_item", "uvm_sequence", "uvm_sequence_library", "uvm_subscriber", "uvm_monitor",
-    "uvm_scoreboard", "uvm_push_driver", "uvm_pull_sequencer", "uvm_reg", "uvm_reg_field", "uvm_reg_block",
-    "uvm_reg_adapter", "uvm_reg_predictor", "uvm_reg_frontdoor", "uvm_reg_backdoor", "uvm_tlm_fifo",
-    "uvm_analysis_export", "uvm_analysis_imp", "uvm_analysis_port", "uvm_sequencer_param_base", "uvm_event",
-    "uvm_barrier", "uvm_barrier_cb", "uvm_tlm_fifo_base", "uvm_tlm_analysis_fifo", "uvm_mem", "uvm_mem_region",
-    "uvm_mem_ral_block", "uvm_mem_ral", "uvm_mem_ral_seq", "uvm_resource_db", "uvm_config_db",
-    "uvm_coreservice_t", "uvm_default_coreservice_t", "uvm_driver_cbs", "uvm_reg_cbs", "uvm_report_catcher",
-    "uvm_root", "uvm_tlm_fifo_size_if", "uvm_cmdline_processor", "uvm_cmdline_options", "uvm_event_pool",
-    "uvm_timeout", "uvm_merger"
-]
+        # Example of configuring weight for resizing
+        self.paned_window.paneconfigure(self.red_frame, minsize=100)  # Minimum size for red frame
 
-uvm_macros = [
-    "`uvm_component_utils()", "`uvm_component_utils_param()", "`uvm_component_utils_begin()",
-    "`uvm_component_utils_end()", "`uvm_object_utils()", "`uvm_object_param_utils()", "`uvm_object_registry()",
-    "`uvm_factory_override()", "`uvm_default_factory()", "`uvm_sequence_library()", "`uvm_sequence_utils()",
-    "`uvm_sequence_library_defines()", "`uvm_info()", "`uvm_warning()", "`uvm_error()", "`uvm_fatal()",
-    "`uvm_report_info()", "`uvm_report_warning()", "`uvm_report_error()", "`uvm_report_fatal()", "`uvm_info_context()",
-    "`uvm_error_context()", "`uvm_warning_context()", "`uvm_fatal_context()", "`uvm_config_db()", "`uvm_verbosity()",
-    "`uvm_object_utils_copy()", "`uvm_object_utils_clone()", "`uvm_object_utils_clone_type()",
-    "`uvm_object_utils_copy_with()", "`uvm_object_utils_deep_copy()", "`uvm_object_utils_deep_copy_with()",
-    "`uvm_object_utils_deep_compare()", "`uvm_field_int()", "`uvm_field_string()", "`uvm_field_bit()",
-    "`uvm_field_byte()", "`uvm_field_enum()", "`uvm_field_real()", "`uvm_field_time()", "`uvm_field_longint",
-    "`uvm_field_array_int()", "`uvm_field_array_string()", "`uvm_field_array_bit()", "`uvm_field_array_byte()",
-    "`uvm_field_array_enum()", "`uvm_field_array_real()", "`uvm_field_array_time()",
-    "`uvm_field_array_longint()", "`uvm_field_object()", "`uvm_field_object_utils()", "`uvm_field_object_utils_array()",
-    "`uvm_field_object_utils_s()", "`uvm_field_object_utils_sa()", "`uvm_field_object_utils_v()",
-    "`uvm_field_object_utils_vs()", "`uvm_cmdline_processor()", "`uvm_global_context()", "`uvm_field_declare()",
-    "`uvm_void()", "`uvm_which_packer()", "`uvm_component_registry()"
-]
+        self.paned_window_right.paneconfigure(self.blue_frame, minsize=30)
+        self.paned_window_right.paneconfigure(self.green_frame, minsize=30)
 
-
-root = tk.Tk()
-root.title('UVMAutocompleter')
-root.geometry('600x400')
-
-text = UVMAutocompleter(root, uvm_classes=uvm_classes, uvm_macros=uvm_macros)
-text.pack(fill="both", expand=True)
-
-root.mainloop()
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = ResizableFramesApp(root)
+    root.mainloop()

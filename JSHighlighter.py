@@ -1,13 +1,11 @@
 """
 ==================================================================
 Project Name:    JSV_Text_Editor
-File Name:       CHighligher.py
-Description:     A custom text editor with features tailored for UVM code, 
-                 including syntax highlighting, autocompletion, auto-indentation,
-                 line numbering, commenting, and find/replace functionality.
+File Name:       JavaScriptHighlighter.py
+Description:     JavaScript syntax highlighter for JSV Text Editor.
 
 Author:          Jovan11111
-Creation Date:   13.7.2024
+Creation Date:   16.7.2024
 Version:         1.0
 
 ==================================================================
@@ -17,35 +15,31 @@ from highLighter import Highlighter
 import re
 import tkinter as tk
 
-
-class CHighLighter(Highlighter):
+class JavaScriptHighlighter(Highlighter):
     def __init__(self, text_widget):
         super().__init__(text_widget)
         self.keyword_tag = "keyword"
-        self.type_tag = "type"
+        self.builtin_tag = "builtin"
         self.comment_tag = "comment"
         self.string_tag = "string"
-        self.special_tag = "special"
         self.number_tag = "number"
+        self.function_tag = "function"
 
-        self.keywords = ["break", "case", "alignas", "alignof", "const", "constexpr", "continue", "default", "do",
-                         "else", "extern", "for", "goto", "if", "inline", "register", "restrict", "return", "sizeof",
-                         "static", "static_assert", "switch", "thread_local", "typedef", "typeof", "typeof_unqual",
-                         "void", "volatile", "while"]
+        self.keywords = [
+            "abstract", "await", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue",
+            "debugger", "default", "delete", "do", "double", "else", "enum", "export", "extends", "false", "final",
+            "finally", "float", "for", "function", "goto", "if", "implements", "import", "in", "instanceof", "int",
+            "interface", "let", "long", "native", "new", "null", "package", "private", "protected", "public", "return",
+            "short", "static", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "true",
+            "try", "typeof", "var", "void", "volatile", "while", "with", "yield"
+        ]
 
-        self.types = ["auto", "bool", "char", "double", "enum", "float", "int", "long", "short", "signed",
-                      "struct", "union", "unsigned"]
+        self.builtins = [
+            "Array", "Date", "eval", "function", "hasOwnProperty", "Infinity", "isFinite", "isNaN", "isPrototypeOf",
+            "length", "Math", "NaN", "name", "Number", "Object", "prototype", "String", "toString", "undefined", 
+            "valueOf"
+        ]
 
-        self.values = ["false", "true", "nullptr"]
-
-        self.special = ["_Alignas", "_Alignof", "_Atomic", "_BitInt", "_Bool", "_Complex", "_Decimal128",
-                        "_Decimal32", "_Decimal64", "_Generic", "_Imaginary", "_Noreturn", "_Static_assert",
-                        "_Thread_local"]
-
-
-    """
-    
-    """
     def highlight_keywords(self):
         self.text_widget.tag_remove(self.keyword_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
@@ -59,30 +53,31 @@ class CHighLighter(Highlighter):
                 self.text_widget.tag_add(self.keyword_tag, start, end)
                 self.text_widget.tag_configure(self.keyword_tag, foreground="orange")
 
-
-    """
-    
-    """
-    def highlight_types(self):
-        self.text_widget.tag_remove(self.type_tag, "1.0", tk.END)
+    def highlight_builtins(self):
+        self.text_widget.tag_remove(self.builtin_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
-        for word in self.types:
+        for word in self.builtins:
             matches = re.finditer(rf'\b{word}\b', text_content, flags=re.DOTALL)
             for match in matches:
                 start_pos = match.start()
                 end_pos = match.end()
                 start = self.text_widget.index(f"1.0 + {start_pos}c")
                 end = self.text_widget.index(f"1.0 + {end_pos}c")
-                self.text_widget.tag_add(self.type_tag, start, end)
-                self.text_widget.tag_configure(self.type_tag, foreground="#77d197")
+                self.text_widget.tag_add(self.builtin_tag, start, end)
+                self.text_widget.tag_configure(self.builtin_tag, foreground="#d912fb")
 
-
-    """
-    
-    """
     def highlight_comments(self):
         self.text_widget.tag_remove(self.comment_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
+
+        matches = re.finditer(r'//.*?\n', text_content, flags=re.DOTALL)
+        for match in matches:
+            start_pos = match.start()
+            end_pos = match.end()
+            start = self.text_widget.index(f"1.0 + {start_pos}c")
+            end = self.text_widget.index(f"1.0 + {end_pos}c")
+            self.text_widget.tag_add(self.comment_tag, start, end)
+            self.text_widget.tag_configure(self.comment_tag, foreground="gray")
 
         matches = re.finditer(r'/\*.*?\*/', text_content, flags=re.DOTALL)
         for match in matches:
@@ -93,24 +88,11 @@ class CHighLighter(Highlighter):
             self.text_widget.tag_add(self.comment_tag, start, end)
             self.text_widget.tag_configure(self.comment_tag, foreground="gray")
 
-        matches = re.finditer(r'//.*?\n', text_content, flags=re.DOTALL)
-        for match in matches:
-            start_pos = match.start()
-            end_pos = match.end()
-            start = self.text_widget.index(f"1.0 + {start_pos}c")
-            end = self.text_widget.index(f"1.0 + {end_pos}c")
-            self.text_widget.tag_add(self.comment_tag, start, end)
-            self.text_widget.tag_configure(self.comment_tag, foreground="gray")
-    
-
-    """
-    
-    """
     def highlight_strings(self):
         self.text_widget.tag_remove(self.string_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
 
-        matches = re.finditer(r'".*?"', text_content, flags=re.DOTALL)
+        matches = re.finditer(r'\".*?\"|\'[^\']*\'', text_content, flags=re.DOTALL)
         for match in matches:
             start_pos = match.start()
             end_pos = match.end()
@@ -119,19 +101,6 @@ class CHighLighter(Highlighter):
             self.text_widget.tag_add(self.string_tag, start, end)
             self.text_widget.tag_configure(self.string_tag, foreground="green")
 
-        matches = re.finditer(r"'.*?'", text_content, flags=re.DOTALL)
-        for match in matches:
-            start_pos = match.start()
-            end_pos = match.end()
-            start = self.text_widget.index(f"1.0 + {start_pos}c")
-            end = self.text_widget.index(f"1.0 + {end_pos}c")
-            self.text_widget.tag_add(self.string_tag, start, end)
-            self.text_widget.tag_configure(self.string_tag, foreground="green")
-
-
-    """
-    
-    """
     def highlight_numbers(self):
         self.text_widget.tag_remove(self.number_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
@@ -145,31 +114,23 @@ class CHighLighter(Highlighter):
             self.text_widget.tag_add(self.number_tag, start, end)
             self.text_widget.tag_configure(self.number_tag, foreground="#d31a38")
 
-
-    """
-    
-    """
-    def highlight_special(self):
-        self.text_widget.tag_remove(self.special_tag, "1.0", tk.END)
+    def highlight_functions(self):
+        self.text_widget.tag_remove(self.function_tag, "1.0", tk.END)
         text_content = self.text_widget.get("1.0", tk.END)
-        for word in self.special:
-            matches = re.finditer(rf'\b{word}\b', text_content, flags=re.DOTALL)
-            for match in matches:
-                start_pos = match.start()
-                end_pos = match.end()
-                start = self.text_widget.index(f"1.0 + {start_pos}c")
-                end = self.text_widget.index(f"1.0 + {end_pos}c")
-                self.text_widget.tag_add(self.special_tag, start, end)
-                self.text_widget.tag_configure(self.special_tag, foreground="blue")
 
+        matches = re.finditer(r'\bfunction\s+\w+\b', text_content, flags=re.DOTALL)
+        for match in matches:
+            start_pos = match.start()
+            end_pos = match.end()
+            start = self.text_widget.index(f"1.0 + {start_pos}c")
+            end = self.text_widget.index(f"1.0 + {end_pos}c")
+            self.text_widget.tag_add(self.function_tag, start, end)
+            self.text_widget.tag_configure(self.function_tag, foreground="#d912fb")
 
-    """
-    
-    """
     def highlight(self):
         self.highlight_keywords()
-        self.highlight_types()
-        self.highlight_special()
-        self.highlight_numbers()
-        self.highlight_strings()
+        self.highlight_builtins()
         self.highlight_comments()
+        self.highlight_strings()
+        self.highlight_numbers()
+        self.highlight_functions()

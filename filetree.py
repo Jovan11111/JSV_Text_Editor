@@ -34,7 +34,7 @@ class FileTree(ttk.Treeview):
         self.bind("<<TreeviewExpand>>", self.on_tree_expand)
 
     def populate_tree(self, folder_path):
-        self.delete(*self.get_children())  
+        self.delete(*self.get_children())
         self.folder_path = folder_path
         node = self.insert("", "end", text=os.path.basename(folder_path), values=[folder_path], open=True, image=self.folder_icon)
         self.add_items(node, folder_path)

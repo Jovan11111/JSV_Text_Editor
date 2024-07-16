@@ -42,6 +42,9 @@ class TextEditor(tk.Tk):
 
         self.create_menu()
 
+        self.file_tree.bind("<<TreeviewSelect>>", self.on_tree_select)
+        self.file_tree.bind("<<TreeviewOpen>>", self.on_tree_open)
+
     def create_menu(self):
         menu = tk.Menu(self)
 

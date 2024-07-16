@@ -15,6 +15,11 @@ import tkinter as tk
 from textLineNumbers import TextLineNumbers
 from SVHihglighter import SVHighlighter
 from CHighlighter import CHighLighter
+from JavaHighlighter import JavaHighlighter
+from HTMLHighlighter import HTMLHighlighter
+from PyHighlighter import PyHighlighter
+from JSHighlighter import JavaScriptHighlighter
+from CppHighlighter import CppHighlighter
 from UVMAutocompleter import UVMAutocompleter, uvm_classes, uvm_macros
 
 
@@ -59,9 +64,10 @@ class ScrollText(tk.Frame):
 
         if self.file_path.split('.')[-1] == "c":
             self.highlighter = CHighLighter(self.text)
+            print("C HAJLAJTER")
         else:
             self.highlighter = SVHighlighter(self.text)
-
+            print("SV HAJLAJTER")
         self.frFram = tk.Frame(self.text)
 
         self.find_entry = tk.Entry(self.frFram, bg='#606366')
@@ -358,10 +364,34 @@ class ScrollText(tk.Frame):
             return None
 
     def load_file(self, file_path):
+        self.file_path = file_path
         with open(file_path, 'r') as file:
             content = file.read()
             self.text.delete(1.0, tk.END)
             self.text.insert(tk.END, content)
+
+        if self.file_path.split('.')[-1] == "c":
+            self.highlighter = CHighLighter(self.text)
+        
+        elif self.file_path.split('.')[-1] == "java":
+            self.highlighter = JavaHighlighter(self.text)
+
+        elif self.file_path.split('.')[-1] == "html":
+            self.highlighter = HTMLHighlighter(self.text)
+        
+        elif self.file_path.split('.')[-1] == "py":
+            self.highlighter = PyHighlighter(self.text)
+        
+        elif self.file_path.split('.')[-1] == "js":
+            self.highlighter = JavaScriptHighlighter(self.text)
+        
+        elif self.file_path.split('.')[-1] == "cpp" or self.file_path.split('.')[-1] == "hpp":
+            self.highlighter = CppHighlighter(self.text)
+
+        else:
+            self.highlighter = SVHighlighter(self.text)
+        
+        self.highlighter.highlight()
 
     def save_file(self, file_path):
         with open(file_path, 'w') as file:

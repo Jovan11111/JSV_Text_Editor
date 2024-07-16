@@ -23,8 +23,10 @@ class SVHighlighter(Highlighter):
         self.type_tag = "type"
         self.comment_tag = "comment"
         self.string_tag = "string"
+        self.number_tag = "number"
         self.uvm_class_tag = "uvm_class"
         self.uvm_macro_tag = "uvm_macro"
+        
         self.keywords = ["rtranif0", "begin", "always", "ifnone", "rpmos", "and", "initial", "rtran", "assign",
                          "rtranif1", "buf", "bufif0", "join", "small", "bufif1", "large", "specify", "case",
                          "macromodule", "specparam", "casex", "medium", "strong0", "casez", "module", "strong1", "cmos",
@@ -188,6 +190,19 @@ class SVHighlighter(Highlighter):
                 self.text_widget.tag_configure(self.uvm_macro_tag, foreground="#c0c0c0")
 
 
+    def highlight_numbers(self):
+        self.text_widget.tag_remove(self.number_tag, "1.0", tk.END)
+        text_content = self.text_widget.get("1.0", tk.END)
+
+        matches = re.finditer(r'\b\d+\b', text_content, flags=re.DOTALL)
+        for match in matches:
+            start_pos = match.start()
+            end_pos = match.end()
+            start = self.text_widget.index(f"1.0 + {start_pos}c")
+            end = self.text_widget.index(f"1.0 + {end_pos}c")
+            self.text_widget.tag_add(self.number_tag, start, end)
+            self.text_widget.tag_configure(self.number_tag, foreground="#d31a38")
+
     """
     
     """
@@ -198,4 +213,5 @@ class SVHighlighter(Highlighter):
         self.highlight_uvm_macros()
         self.highlight_strings()
         self.highlight_comments()
+        self.highlight_numbers()
 

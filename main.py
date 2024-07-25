@@ -14,9 +14,8 @@ Version:         1.0
 """
 
 import tkinter as tk
-from texteditor import TextEditor
+from components.texteditor import TextEditor
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    editor = TextEditor(root)
-    root.mainloop()
+    app = TextEditor()
+    app.mainloop()

@@ -38,7 +38,7 @@ To use JSV Text Editor, follow these steps:
 
 1. Clone the repository:
     ```bash
-    git clone [https://github.com/yourusername/jsv-text-editor.git](https://github.com/Jovan11111/JSV_Text_Editor)
+    git clone https://github.com/Jovan11111/JSV_Text_Editor
     ```
 2. Navigate to the project directory:
     ```bash

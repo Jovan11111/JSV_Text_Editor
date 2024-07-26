@@ -78,6 +78,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Acknowledgements
 
 - Tkinter: The Python library for creating graphical user interfaces.
+- TkTerm
+- Pillow
 
 ## Contact
 

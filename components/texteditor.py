@@ -1,3 +1,16 @@
+"""
+==================================================================
+Project Name:    JSV_Text_Editor
+File Name:       texteditor.py
+Description:     
+
+Author:          Jovan11111
+Creation Date:   13.7.2024
+Version:         1.0
+
+==================================================================
+"""
+
 import os
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk

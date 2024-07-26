@@ -1,3 +1,16 @@
+"""
+==================================================================
+Project Name:    JSV_Text_Editor
+File Name:       CppHighlighter.py
+Description:     
+
+Author:          Jovan11111
+Creation Date:   13.7.2024
+Version:         1.0
+
+==================================================================
+"""
+
 from highlighters.highLighter import Highlighter
 import tkinter as tk
 import re
@@ -36,8 +49,8 @@ class CppHighlighter(Highlighter):
         ]
 
         self.comment_patterns = [
-            r'//.*?\n',     # Single-line comments
-            r'/\*.*?\*/',   # Multi-line comments
+            r'//.*?\n',     
+            r'/\*.*?\*/',   
         ]
 
         self.string_pattern = r'"(.*?)"'

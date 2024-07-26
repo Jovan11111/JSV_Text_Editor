@@ -63,7 +63,11 @@ class ScrollText(tk.Frame):
         self.text.bind('<Control-f>', self.toggle_widgets)
         self.text.bind("<Alt-c>", self.toggle_comment)
         self.text.bind("<Tab>", self.handle_tab)
-
+        self.text.bind("<parenleft>", self.handle_left_paren)
+        self.text.bind("<braceleft>", self.handle_left_brace)
+        self.text.bind("<quotedbl>", self.handle_dblquote)
+        self.text.bind("<bracketleft>", self.handle_left_bracket)
+        self.text.bind("<apostrophe>", self.handle_quote)
 
         if self.file_path.split('.')[-1] == "c":
             self.highlighter = CHighLighter(self.text)
@@ -141,21 +145,22 @@ class ScrollText(tk.Frame):
         if event.keysym not in ("BackSpace", "Delete", "Left", "Right", "Up", "Down"):
             self.text._autocomplete(event)
             cursor_index = self.text.index(tk.INSERT)
-            if event.keysym == 'braceleft':
-                self.text.insert(cursor_index, '}')
-                self.text.mark_set(tk.INSERT, cursor_index)
-            if event.keysym == 'parenleft':
-                self.text.insert(cursor_index, ')')
-                self.text.mark_set(tk.INSERT, cursor_index)
-            if event.keysym == 'quotedbl':
-                self.text.insert(cursor_index, '"')
-                self.text.mark_set(tk.INSERT, cursor_index)
-            if event.keysym == 'bracketleft':
-                self.text.insert(cursor_index, ']')
-                self.text.mark_set(tk.INSERT, cursor_index)
-            if event.keysym == 'apostrophe': 
-                self.text.insert(cursor_index, "'")
-                self.text.mark_set(tk.INSERT, cursor_index)
+
+            #if event.keysym == 'braceleft':
+            #    self.text.insert(cursor_index, '}')
+            #    self.text.mark_set(tk.INSERT, cursor_index)
+            #if event.keysym == 'parenleft':
+            #    self.text.insert(cursor_index, ')')
+            #    self.text.mark_set(tk.INSERT, cursor_index)
+            #if event.keysym == 'quotedbl':
+            #    self.text.insert(cursor_index, '"')
+            #    self.text.mark_set(tk.INSERT, cursor_index)
+            #if event.keysym == 'bracketleft':
+            #    self.text.insert(cursor_index, ']')
+            #    self.text.mark_set(tk.INSERT, cursor_index)
+            #if event.keysym == 'apostrophe': 
+            #    self.text.insert(cursor_index, "'")
+            #    self.text.mark_set(tk.INSERT, cursor_index)
 
 
     """
@@ -400,3 +405,80 @@ class ScrollText(tk.Frame):
         with open(file_path, 'w') as file:
             content = self.text.get(1.0, tk.END)
             file.write(content)
+
+    def handle_left_paren(self, event):
+        try:
+            selected_text = self.text.selection_get()
+            start = self.text.index(tk.SEL_FIRST)
+            self.text.insert(start, '(')
+            end = self.text.index(tk.SEL_LAST)
+            self.text.insert(end, ')')
+        except tk.TclError:
+            cursor_index = self.text.index(tk.INSERT)
+            self.text.insert(cursor_index, ')')
+            self.text.mark_set(tk.INSERT, cursor_index)
+            self.text.insert(cursor_index, '(')
+        
+        return 'break'
+    
+    def handle_left_brace(self, event):
+        try:
+            selected_text = self.text.selection_get()
+            start = self.text.index(tk.SEL_FIRST)
+            self.text.insert(start, '{')
+            end = self.text.index(tk.SEL_LAST)
+            self.text.insert(end, '}')
+        except tk.TclError:
+            cursor_index = self.text.index(tk.INSERT)
+            self.text.insert(cursor_index, '}')
+            self.text.mark_set(tk.INSERT, cursor_index)
+            self.text.insert(cursor_index, '{')
+        
+        return 'break'
+    
+    def handle_left_bracket(self, event):
+        try:
+            selected_text = self.text.selection_get()
+            start = self.text.index(tk.SEL_FIRST)
+            self.text.insert(start, '[')
+            end = self.text.index(tk.SEL_LAST)
+            self.text.insert(end, ']')
+        except tk.TclError:
+            cursor_index = self.text.index(tk.INSERT)
+            self.text.insert(cursor_index, ']')
+            self.text.mark_set(tk.INSERT, cursor_index)
+            self.text.insert(cursor_index, '[')
+        
+        return 'break'
+
+    def handle_dblquote(self, event):
+        try:
+            selected_text = self.text.selection_get()
+            start = self.text.index(tk.SEL_FIRST)
+            self.text.insert(start, '"')
+            end = self.text.index(tk.SEL_LAST)
+            self.text.insert(end, '"')
+        except tk.TclError:
+            cursor_index = self.text.index(tk.INSERT)
+            self.text.insert(cursor_index, '"')
+            self.text.mark_set(tk.INSERT, cursor_index)
+            self.text.insert(cursor_index, '"')
+        
+        return 'break'
+    
+    def handle_quote(self, event):
+        try:
+            selected_text = self.text.selection_get()
+            start = self.text.index(tk.SEL_FIRST)
+            self.text.insert(start, "'")
+            end = self.text.index(tk.SEL_LAST)
+            self.text.insert(end, "'")
+        except tk.TclError:
+            cursor_index = self.text.index(tk.INSERT)
+            self.text.insert(cursor_index, "'")
+            self.text.mark_set(tk.INSERT, cursor_index)
+            self.text.insert(cursor_index, "'")
+        
+        return 'break'
+    
+    

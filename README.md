@@ -31,7 +31,12 @@ JSV Text Editor is a powerful and versatile text editor built with Tkinter, desi
 - **Toggle Comment (Alt+C):** 
   - Comments/uncomments the current line if no text is selected.
   - Wraps the selected text with block comment delimiters if text is selected.
-
+- **Open File (Ctrl+O):** Opens the selected file from the file system
+- **Open Folder (Ctrl+Shift+F):** Opens the selected folder from the file system and displays it in filetree
+- **New File (Ctrl+N):** Creates a new empty text file
+- **Save File (Ctrl+S):** Saves file
+- **Save As File (Ctrl+Shift+S):** Does a Save as File
+  
 ## Installation
 
 To use JSV Text Editor, follow these steps:
